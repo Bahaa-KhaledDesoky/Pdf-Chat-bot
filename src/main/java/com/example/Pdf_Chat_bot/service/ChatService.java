@@ -30,12 +30,6 @@ public class ChatService {
                 .stream()
                 .map(chatMapping::toChatDto).collect(Collectors.toList());
     }
-    public Integer AddMessage(Message message){
-        AppUser user=userService.getUser(message.user());
-        Pdf pdf =pdfService.GetPdf(message.pdf());
-        Chat chat = chatMapping.toChat(message,pdf,user);
-        return chatRepo.save(chat).getId();
-    }
     public String getRespondFromAi(Message message ){
         AppUser user=userService.getUser(message.user());
         Pdf pdf =pdfService.GetPdf(message.pdf());
