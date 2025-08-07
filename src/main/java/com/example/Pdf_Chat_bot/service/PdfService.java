@@ -34,9 +34,10 @@ public class PdfService {
         Pdf pdf=pdfRepo.findById(id).orElseThrow(()->new FileNotFoundException(id));
         return pdf;
     }
-    public void DeletePdf(Integer id){
+    public boolean DeletePdf(Integer id){
         GetPdf(id);
         pdfRepo.deleteById(id);
+        return true;
     }
 
 }
