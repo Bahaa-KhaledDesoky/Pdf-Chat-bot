@@ -13,6 +13,7 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(columnDefinition = "LONGTEXT")
     private String message;
     @Enumerated(EnumType.STRING)
     private Sender sender ;

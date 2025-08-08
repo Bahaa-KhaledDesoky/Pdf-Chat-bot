@@ -14,8 +14,10 @@ import java.util.List;
 @Builder
 public class Pdf {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
+    @Column(columnDefinition = "LONGTEXT")
     private String text;
     @ManyToOne
     @JoinColumn(name = "user_id")

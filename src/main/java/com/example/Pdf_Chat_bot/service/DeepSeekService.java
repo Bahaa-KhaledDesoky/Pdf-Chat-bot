@@ -23,12 +23,11 @@ public class DeepSeekService {
     @Value("${deepseek.api.key}")
     private String apiKey;
     public String getResponseFromDeepSeek(List<ChatMessageDTO> messages) {
-        ChatRequestDTO requestDTO = new ChatRequestDTO("deepseek-chat", messages);
+        ChatRequestDTO requestDTO = new ChatRequestDTO("deepseek/deepseek-chat-v3-0324:free", messages);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);
-        headers.set("HTTP-Referer", "https://yourdomain.com");
         HttpEntity<ChatRequestDTO> request = new HttpEntity<>(requestDTO, headers);
 
         ResponseEntity<ChatResponseDTO> response = restTemplate.exchange(

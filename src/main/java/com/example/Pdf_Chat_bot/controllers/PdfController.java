@@ -23,8 +23,8 @@ public class PdfController {
         boolean flag =pdfService.AddPdf( addPdf);
         return ResponseEntity.ok(flag);
     }
-    @GetMapping("/GetUserPdfs")
-    public ResponseEntity<?> GetUserPdfs(@RequestBody Integer id){
+    @GetMapping("/GetUserPdfs/{id}")
+    public ResponseEntity<?> GetUserPdfs(@PathVariable Integer id){
         List<UserPdfs> list=pdfService.GetUserPdfs( id);
         return ResponseEntity.ok(list);
     }

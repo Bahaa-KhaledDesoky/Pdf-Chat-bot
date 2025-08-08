@@ -21,7 +21,7 @@ public class ChatController {
         return ResponseEntity.ok(chat);
     }
     @PostMapping("/getRespondFromAi")
-    public ResponseEntity<?> getRespondFromAi(Message message ){
+    public ResponseEntity<?> getRespondFromAi(@RequestBody Message message ){
         String respond= chatService.getRespondFromAi( message );
         return ResponseEntity.ok(respond);
     }

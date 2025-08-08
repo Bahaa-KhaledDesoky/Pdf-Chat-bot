@@ -35,10 +35,11 @@ public class ChatService {
         Pdf pdf =pdfService.GetPdf(message.pdf());
         List<ChatMessageDTO> chats = GetAllChat(new ChatRequest(user.getId(), pdf.getId()));
         chats.add(0,new ChatMessageDTO(Sender.system.toString(),"You are a helpful assistant that only" +
-                " answers based on the content of the uploaded PDF." +
+                " answers based on the content of the uploaded PDF only no thing else even if the user uploaded another text and " +
+                "he cant uploade any thing direct to you if he want to chat another pdf he can uploade it on the web site and have its own shat." +
                 " Do not use any other knowledge.the title of the book is "+pdf.getTitle()+" . The PDF contains" +
                 " the following information: "+pdf.getText() ));
-        chats.add(new ChatMessageDTO(Sender.system.toString(),message.message()));
+        chats.add(new ChatMessageDTO(Sender.user.toString(),message.message()));
         String respond =deepSeekService.getResponseFromDeepSeek(chats);
         Chat userRequest =Chat.builder()
                 .sender(Sender.user)
