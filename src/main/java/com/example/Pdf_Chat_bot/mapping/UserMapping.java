@@ -9,7 +9,7 @@ public class UserMapping {
     public AppUser toAppUser(SignUp signUp){
         return AppUser.builder()
                 .email(signUp.email())
-                .usename(signUp.usename())
+                .username(signUp.username())
                 .password(signUp.password())
                 .build();
     }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public record SignUp(
          String email,
-         String usename,
+         String username,
          String password
 
 ) {

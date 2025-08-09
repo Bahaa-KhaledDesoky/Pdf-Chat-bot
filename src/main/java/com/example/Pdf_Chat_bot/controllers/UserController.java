@@ -17,10 +17,10 @@ public class UserController {
         Integer id=userService.SignUp(signUp);
         return ResponseEntity.ok(id) ;
     }
-    @GetMapping("/Login")
-    public ResponseEntity<?> Login(Login login){
+    @PostMapping("/Login")
+    public ResponseEntity<?> Login(@RequestBody Login login){
 
-        Boolean flag=userService.Login(login);
+        Integer flag=userService.Login(login);
         return ResponseEntity.ok(flag);
 
     }

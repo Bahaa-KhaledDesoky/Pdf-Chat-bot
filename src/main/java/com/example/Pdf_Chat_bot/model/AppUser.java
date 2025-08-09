@@ -18,7 +18,7 @@ public class AppUser{
     private Integer id;
     private String email;
     private String password;
-    private String usename;
+    private String username;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Pdf> pdfs;

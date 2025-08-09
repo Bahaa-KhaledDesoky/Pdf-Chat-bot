@@ -18,4 +18,5 @@ public class GlobalExceptionHandler {
         errorDetails.put("Message", ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
 }
