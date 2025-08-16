@@ -15,8 +15,9 @@ public class PdfMapping {
                 .user(user)
                 .build();
     }
+
     public UserPdfs toUserPdf(Pdf pdf){
-        return new UserPdfs(pdf.getId(),pdf.getTitle(),pdf.getText()) ;
+        return new UserPdfs(pdf.getId(),pdf.getTitle()) ;
     }
     public Pdf toPdf(UserPdfs pdf){
         return Pdf.builder()

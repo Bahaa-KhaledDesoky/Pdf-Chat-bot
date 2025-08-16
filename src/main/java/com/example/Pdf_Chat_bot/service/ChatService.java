@@ -70,15 +70,15 @@ public class ChatService {
     private String OpenRouter(List<ChatMessageDTO> chats , UserPdfs pdf){
         String message =chats.get(chats.size()-1).content();
         String chunksText=getChunkText(chats ,pdf.id());
+        AppUser user =pdfService.GetPdf(pdf.id()).getUser();
         chats.add(0,new ChatMessageDTO(Sender.system.toString(),"You are a helpful assistant that only" +
                 " answers based on the content of the uploaded PDF only no thing else even if the user uploaded another text and " +
                 "he cant uploade any thing direct to you if he want to chat another pdf he can uploade it on the web site and have its own shat." +
                 " Do not use any other knowledge.the title of the book is "+pdf.title()+" . The PDF contains" +
                 " the following chunks: "+chunksText ));
-        String respond =deepSeekService.getResponseFromDeepSeek(chats);
+        String respond =deepSeekService.getResponseFromDeepSeek(chats,user.getModelName(),user.getOpenRouterKey());
         saveQA(message,respond,pdf);
         return respond;
-
     }
     private String huggingFace(List<ChatMessageDTO> chats , UserPdfs pdf){
         String message =chats.get(chats.size()-1).content();
@@ -97,10 +97,9 @@ public class ChatService {
     }
     public String getRespondFromAi(List<ChatMessageDTO> chats , UserPdfs pdf,Boolean flag){
         if(flag)
-            return OpenRouter(chats , pdf);
+            return OpenRouter(chats,pdf);
         else
             return huggingFace(chats,pdf);
-
     }
     public List<PdfChank> getTopChanks(String message , Integer pdf_id) throws JsonProcessingException {
 

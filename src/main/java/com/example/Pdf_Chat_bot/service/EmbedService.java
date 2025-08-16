@@ -23,9 +23,6 @@ public class EmbedService {
         this.restTemplate=restTemplate;
         this.deepSeekService = deepSeekService;
     }
-    String URL = "https://bahaakhaled-pdf-embedding-service.hf.space/gradio_api/call/predict";
-
-
     public List<List<Double>> getEmbeddings(List<String> texts) {
 
 
@@ -71,7 +68,6 @@ public class EmbedService {
         int index = body.indexOf("data:");
         body = body.substring(index+"data:".length()).trim();
         ObjectMapper mapper = new ObjectMapper();
-        deepSeekService.falconRequest();
         try {
             List<List<List<Double>>> list = mapper.readValue(body, new TypeReference<List<List<List<Double>>>>() {});
             return list.get(0);
@@ -84,7 +80,6 @@ public class EmbedService {
     public Double cosineSimilarity(List<Double> vecA, List<Double> vecB) {
 
         if (vecA.size() != vecB.size()) throw new IllegalArgumentException("Vectors must be same size");
-
         double dotProduct = 0.0;
         double normA = 0.0;
         double normB = 0.0;
@@ -94,7 +89,6 @@ public class EmbedService {
             normA += Math.pow(vecA.get(i), 2);
             normB += Math.pow(vecB.get(i), 2);
         }
-
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 

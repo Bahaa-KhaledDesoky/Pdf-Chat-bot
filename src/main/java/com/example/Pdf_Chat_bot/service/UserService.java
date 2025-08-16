@@ -32,7 +32,7 @@ public class UserService {
         throw new UserNotFoundException();
     }
     public Boolean Model(AddOpenRouter openRouter){
-        AppUser user= userRepo.findById(openRouter.userId()).orElseThrow(()->new UserNotFoundException());
+        AppUser user= getUser(openRouter.userId());
         user.setModelName(openRouter.modelName());
         user.setOpenRouterKey(openRouter.apiKey());
         userRepo.save(user);

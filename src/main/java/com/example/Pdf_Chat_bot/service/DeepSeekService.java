@@ -4,8 +4,6 @@ import com.example.Pdf_Chat_bot.AIDtos.ChatMessageDTO;
 import com.example.Pdf_Chat_bot.AIDtos.ChatRequestDTO;
 import com.example.Pdf_Chat_bot.AIDtos.ChatResponseDTO;
 import com.example.Pdf_Chat_bot.AIDtos.HuggingFaceRequest;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -19,13 +17,12 @@ public class DeepSeekService {
         this.restTemplate = restTemplate;
     }
     private final RestTemplate restTemplate;
-    private final String DEEPSEEK_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    @Value("${deepseek.api.key}")
-    private String apiKey;
 
 
-    public String getResponseFromDeepSeek(List<ChatMessageDTO> messages) {
-        ChatRequestDTO requestDTO = new ChatRequestDTO("openai/gpt-oss-20b:free", messages);
+    public String getResponseFromDeepSeek(List<ChatMessageDTO> messages,String model,String apiKey) {
+        final String DEEPSEEK_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+
+        ChatRequestDTO requestDTO = new ChatRequestDTO(model, messages);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);
@@ -37,7 +34,6 @@ public class DeepSeekService {
                 request,
                 ChatResponseDTO.class
         );
-
         return response.getBody().choices().get(0).message().content();
     }
     public String huggingFaceRespond(String history,String chunks, String question){

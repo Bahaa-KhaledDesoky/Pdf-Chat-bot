@@ -33,11 +33,9 @@ public class PdfService {
     private final PdfMapping pdfMapping;
     private final UserService userService;
     private final EmbedService embedService;
-
     @Transactional
     public boolean AddPdf(MultipartFile file,Integer userId ,String title){
         try {
-
             List<UserPdfs> pdfs =GetUserPdfs(userId);
             boolean exists = pdfs.stream()
                     .anyMatch(pdf -> pdf.title().equals(title));
