@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LoginRequest, SignUpRequest } from '../axios/userRequstes';
+import { AddModel, LoginRequest, SignUpRequest } from '../axios/userRequstes';
 
 const initialState = {
     user: {
         id: "",
         email: '',
         password: '',
+        
     },
     status: 'idle',
     error: null
 }
-
 
 const userSlice = createSlice({
     name: 'user',
@@ -20,6 +20,15 @@ const userSlice = createSlice({
             state.user.email = action.payload.email;
             state.user.password = action.payload.password;
         }
+        ,
+        signOut:(state)=>{
+            state.user.id="";
+            state.user.email='';
+            state.user.password='';
+            state.status= 'idle';
+            state.error = null;
+        }
+        
     },
     extraReducers(builder) {
         builder.addCase(LoginRequest.pending, (state) => {
@@ -49,10 +58,21 @@ const userSlice = createSlice({
                 state.status = "rejected";
                 state.error = action.payload;
                 console.log(state.error);
+            }).addCase(AddModel.pending, (state) => {
+                state.status = 'loading';
+                console.log(state.status);
+            })
+            .addCase(AddModel.fulfilled, (state) => {
+                state.status = 'success';
+                console.log(state.status);
+            }).addCase(AddModel.rejected, (state, action) => {
+                state.status = "rejected";
+                state.error = action.payload;
+                console.log(state.error);
             })
     }
 
 });
 
-export const { login } = userSlice.actions;
+export const { login, signOut } = userSlice.actions;
 export default userSlice.reducer;

@@ -11,7 +11,11 @@ const pdfSlice=createSlice(
         name: 'pdf',
         initialState,
         reducers: {
-            
+            resetPdf:(state)=>{
+                state.pdf = [];
+                state.status = 'idle';
+                state.error = null;
+            }
         },
         extraReducers(builder) {
             builder.addCase(uploadPdf.pending, (state) => {
@@ -53,4 +57,5 @@ const pdfSlice=createSlice(
     }
 
 )
+export const {resetPdf}=pdfSlice.actions;
 export default pdfSlice.reducer;

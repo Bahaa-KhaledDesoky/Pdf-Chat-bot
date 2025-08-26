@@ -25,8 +25,12 @@ public class UserService {
         return userRepo.save(user).getId();
 
     }
+    public AppUser getUserByEmail(String email ){
+        AppUser user= userRepo.findByEmail(email).orElseThrow(()->new UserNotFoundException());
+        return user;
+    }
     public Integer Login(Login login){
-        AppUser user= userRepo.findByEmail(login.email()).orElseThrow(()->new UserNotFoundException());
+        AppUser user= getUserByEmail(login.email());
         if(login.password().equals(user.getPassword()))
             return user.getId();
         throw new UserNotFoundException();

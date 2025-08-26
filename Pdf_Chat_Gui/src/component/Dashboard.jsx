@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadPdf, getUserPdfs } from "../axios/pdfRequeste";
 import { useNavigate } from "react-router";
+import AppHeader from "./AppHeader";
 const Dashboard = () => {
     const userId = useSelector((state) => state.user?.user?.id);
     const pdfs = useSelector((state) => state.pdf?.pdf || []);
@@ -25,16 +26,23 @@ const Dashboard = () => {
             formData.append("file", selectedFile);
             formData.append("userId", userId);
             formData.append("title", selectedFile.name);
-            dispatch(uploadPdf({ pdfData: formData }));
-            navigate("/dashboard");
-
-
+            dispatch(uploadPdf({ pdfData: formData }))
+                .unwrap()
+                .then(() => {
+                    dispatch(getUserPdfs({ userId }));
+                    setSelectedFile(null);
+                })
+                .catch((error) => {
+                    console.error("Upload failed:", error);
+                });
         }
     };
     
 
     return (
+        <div><AppHeader />
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            
             <h2 className="text-3xl font-bold mb-6">Welcome to the Dashboard!</h2>
             <div className="grid grid-cols-1 gap-6 mb-8 w-full max-w-xl">
                 {pdfs.length === 0 && (
@@ -69,6 +77,7 @@ const Dashboard = () => {
                     Add PDF
                 </button>
             </div>
+        </div>
         </div>
     );
 };

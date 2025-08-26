@@ -14,6 +14,12 @@ const chatSlice = createSlice({
         addLocalMessage: (state, action) => {
             state.chat.push(action.payload);
         }
+        ,
+        resetChat:(state)=>{  
+            state.chat = [];
+            state.state = "idle";
+            state.error = null;
+        }
     },
     initialState,
     extraReducers: (builder) => {
@@ -44,5 +50,5 @@ const chatSlice = createSlice({
     },
 
 })
-export const { addLocalMessage } = chatSlice.actions;
+export const { addLocalMessage, resetChat } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -15,9 +15,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +38,28 @@ public class PdfService {
     private final PdfMapping pdfMapping;
     private final UserService userService;
     private final EmbedService embedService;
+
+
+    public String OcrPdf(PDDocument document) {
+       try {
+           StringBuilder stringBuilder=new StringBuilder();
+           PDFRenderer pdfRenderer=new PDFRenderer(document);
+           ITesseract tesseract=new Tesseract();
+           tesseract.setDatapath("C:/Program Files/Tesseract-OCR/tessdata");
+           tesseract.setLanguage("eng");
+           for(int i=0;i<document.getNumberOfPages();i++)
+           {
+               BufferedImage bufferedImage=pdfRenderer.renderImageWithDPI(i,300);
+               String result=tesseract.doOCR(bufferedImage);
+               stringBuilder.append(result).append("\n");
+           }
+           return stringBuilder.toString();
+       }
+       catch (IOException | TesseractException e){
+           throw new RuntimeException("error in ORM Function",e);
+       }
+
+    }
     @Transactional
     public boolean AddPdf(MultipartFile file,Integer userId ,String title){
         try {
@@ -46,13 +73,17 @@ public class PdfService {
             PDDocument document = PDDocument.load(file.getInputStream());
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
+            if(text.trim().isEmpty())
+            {
+                text=OcrPdf(document);
+            }
             document.close();
             AppUser user =userService.getUser(userId);
-            Pdf pdf =pdfMapping.toPdf(new AddPdf(title,text),user);
+            Pdf pdf=pdfMapping.toPdf(new AddPdf(title,text),user);
             pdf = pdfRepo.save(pdf);
             createChanks(pdf);
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new PdfReadingException();
         }
     }

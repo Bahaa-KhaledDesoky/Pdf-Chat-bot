@@ -3,8 +3,10 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllChat, getRespondFromAi } from "../axios/chatRequest";
 import { addLocalMessage } from "../redux/chatSlice";
+import AppHeader from "./AppHeader";
 
 const Chat = () => {
+    const [apiKeyEnabled, setApiKeyEnabled] = useState(false);
     const [message, setMessage] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const location = useLocation();
@@ -32,7 +34,8 @@ const Chat = () => {
 
             dispatch(getRespondFromAi({
                 chats: updatedChat,
-                pdf: { id: pdfId, title: pdfTitle, text: pdfText }
+                pdf: { id: pdfId, title: pdfTitle, text: pdfText },
+                flag: apiKeyEnabled
             })).finally(() => {
                 setIsTyping(false);
             });
@@ -40,14 +43,36 @@ const Chat = () => {
             setMessage("");
         }
     };
-
+    function onToggleApiKey() {
+        setApiKeyEnabled((prev) => !prev);
+        console.log("API Key Enabled:", !apiKeyEnabled);
+    }
     return (
+        <div>
+            <AppHeader />
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-4">
             <div className="bg-white/70 backdrop-blur-lg shadow-2xl rounded-2xl w-full max-w-4xl flex flex-col h-[85vh] overflow-hidden border border-gray-200">
-
                 {/* Sticky Header */}
-                <div className="bg-blue-600 text-white py-4 px-6 text-lg font-semibold shadow-md sticky top-0 z-10">
-                    Chat about: {pdfTitle}
+                <div className="flex bg-blue-600 text-white py-4 px-6 text-lg font-semibold shadow-md sticky top-0 z-10">
+                    <div>
+                    <span>Chat about: {pdfTitle}</span>
+                    </div>
+                    <div className="ml-auto">
+                        <span className="" >Enable Using API Key</span>
+                    </div>
+                    <div className="ml-3 py-0">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                    value={apiKeyEnabled}
+                                    onChange={onToggleApiKey}
+                            />
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-black transition-colors duration-300"></div>
+                            <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5"></span>
+                        </label>
+
+                    </div>
                 </div>
 
                 {/* Messages */}
@@ -124,6 +149,8 @@ const Chat = () => {
                 </form>
             </div>
         </div>
+    </div>
+
     );
 };
 

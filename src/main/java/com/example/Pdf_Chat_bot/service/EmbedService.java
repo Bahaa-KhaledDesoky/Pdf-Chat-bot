@@ -27,7 +27,7 @@ public class EmbedService {
 
 
         // Base URL for Gradio API predict call
-        String baseUrl = "https://bahaakhaled-pdf-embedding-service.hf.space/gradio_api/call/predict";
+        String baseUrl = "https://bahaakhaled-pdfembedding.hf.space/gradio_api/call/predict";
 
         // Prepare headers
         HttpHeaders headers = new HttpHeaders();
@@ -91,13 +91,4 @@ public class EmbedService {
         }
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
-
-
-
-
-
-
-
-
-
 }

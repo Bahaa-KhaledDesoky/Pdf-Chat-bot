@@ -8,7 +8,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["user", "pdf","chat"], // only these slices will be persisted
+    whitelist: ["user", "pdf","chat"],
 };
 
 const rootReducer = combineReducers({
