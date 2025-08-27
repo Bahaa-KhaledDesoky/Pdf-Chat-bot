@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllChat, getRespondFromAi } from "../axios/chatRequest";
 import { addLocalMessage } from "../redux/chatSlice";
 import AppHeader from "./AppHeader";
+import ReactMarkdown from "react-markdown";
 
 const Chat = () => {
     const [apiKeyEnabled, setApiKeyEnabled] = useState(false);
@@ -98,7 +99,12 @@ const Chat = () => {
                                             : "bg-gray-200 text-gray-900 rounded-bl-none"
                                         }`}
                                 >
-                                    {msg.content}
+                                    <div className="prose">
+                                        <ReactMarkdown>
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    </div>
+
                                 </div>
 
                                 {msg.role === "user" && (

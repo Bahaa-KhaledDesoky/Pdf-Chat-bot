@@ -4,11 +4,9 @@ import com.example.Pdf_Chat_bot.AIDtos.ChatMessageDTO;
 import com.example.Pdf_Chat_bot.AIDtos.ChatRequestDTO;
 import com.example.Pdf_Chat_bot.AIDtos.ChatResponseDTO;
 import com.example.Pdf_Chat_bot.AIDtos.HuggingFaceRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.*;
 
 @Service
@@ -46,12 +44,35 @@ public class DeepSeekService {
         data.add(chunks);
         data.add(question);
         HttpEntity<HuggingFaceRequest> httpEntity=new HttpEntity<>(new HuggingFaceRequest(data));
-        ResponseEntity<String> response=restTemplate.exchange(
+
+        ResponseEntity<Map> postResponse = restTemplate.exchange(
                 baseUrl,
                 HttpMethod.POST,
                 httpEntity,
+                Map.class
+        );
+
+        // Extract event_id from POST response
+        String eventId = (String) postResponse.getBody().get("event_id");
+
+        if (eventId == null) {
+            throw new RuntimeException("Failed to get event_id from embedding API");
+        }
+
+        // Step 2: GET request to fetch embeddings using event_id
+        String getUrl = baseUrl + "/" + eventId;
+
+        ResponseEntity<String> getResponse = restTemplate.exchange(
+                getUrl,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
                 String.class
         );
-        return response.getBody();
+        String response = getResponse.getBody();
+        int index1 =response.indexOf("[");
+        int index2 =response.indexOf("]");
+        response=response.substring(index1+2,index2-1);
+        return response;
+
     }
 }

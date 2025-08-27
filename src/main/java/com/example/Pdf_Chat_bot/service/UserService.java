@@ -3,12 +3,15 @@ package com.example.Pdf_Chat_bot.service;
 import com.example.Pdf_Chat_bot.Dto.AddOpenRouter;
 import com.example.Pdf_Chat_bot.Dto.Login;
 import com.example.Pdf_Chat_bot.Dto.SignUp;
+import com.example.Pdf_Chat_bot.exception.UserExistExciption;
 import com.example.Pdf_Chat_bot.exception.UserNotFoundException;
 import com.example.Pdf_Chat_bot.mapping.UserMapping;
 import com.example.Pdf_Chat_bot.model.AppUser;
 import com.example.Pdf_Chat_bot.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -21,9 +24,18 @@ public class UserService {
             return user;
     }
     public Integer SignUp(SignUp signUp){
+        boolean flag =  userExist(signUp.email());
+        if(flag)
+           throw new UserExistExciption();
+
         AppUser user = userMapping.toAppUser(signUp);
         return userRepo.save(user).getId();
-
+    }
+    private Boolean userExist(String email){
+        Optional<AppUser> user= userRepo.findByEmail(email);
+        if(user.isPresent())
+            return true;
+        return false;
     }
     public AppUser getUserByEmail(String email ){
         AppUser user= userRepo.findByEmail(email).orElseThrow(()->new UserNotFoundException());

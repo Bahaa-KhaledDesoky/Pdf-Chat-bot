@@ -28,9 +28,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileExistExeption.class)
     public ResponseEntity<?> handleFileExistExeption(FileExistExeption ex, WebRequest request) {
         Map<String,String> errorDetails = new HashMap<>();
-        errorDetails.put("HttpStatus",""+HttpStatus.ALREADY_REPORTED.value());
+        errorDetails.put("HttpStatus",""+HttpStatus.BAD_REQUEST.value());
         errorDetails.put("Message", ex.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+  @ExceptionHandler(UserExistExciption.class)
+    public ResponseEntity<?> handleUserExistExciption(UserExistExciption ex, WebRequest request) {
+        Map<String,String> errorDetails = new HashMap<>();
+        errorDetails.put("HttpStatus",""+HttpStatus.BAD_REQUEST.value());
+        errorDetails.put("Message", ex.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
 }
