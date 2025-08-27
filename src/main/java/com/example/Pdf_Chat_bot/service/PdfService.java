@@ -56,7 +56,7 @@ public class PdfService {
            return stringBuilder.toString();
        }
        catch (IOException | TesseractException e){
-           throw new RuntimeException("error in ORM Function",e);
+           throw new OcrException();
        }
 
     }
