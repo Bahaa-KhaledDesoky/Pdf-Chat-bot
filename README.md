@@ -67,6 +67,54 @@ flowchart TD
 - OpenRouter (optional; user-provided API key and model name)
 - Tesseract OCR (for scanned PDFs)
 - Maven build (`mvnw`, `mvnw.cmd` included)
+- React 19 + Vite (frontend)
+- Redux Toolkit + Redux Persist
+- React Router 7
+- Tailwind CSS
+- Axios
+- react-markdown
+
+---
+
+## Frontend (React)
+
+Location: `Pdf_Chat_Gui/`
+
+- Built with Vite + React 19
+- State: Redux Toolkit + Redux Persist
+- Routing: React Router 7
+- Styling: Tailwind CSS (via `@tailwindcss/vite`), plus `App.css`
+- HTTP: Axios thunks
+- Markdown rendering: `react-markdown`
+
+Scripts:
+
+```bash
+cd Pdf_Chat_Gui
+npm install
+npm run dev      # start Vite dev server
+npm run build    # production build
+npm run preview  # preview production build
+```
+
+API base URLs (adjust for your backend host/port):
+
+- `src/axios/chatRequest.js` → `http://localhost:8081/api/chat`
+- `src/axios/pdfRequeste.js` → `http://localhost:8081/api/pdf`
+- `src/axios/userRequstes.jsx` → `http://localhost:8081/api/user`
+
+Key modules/components:
+
+- `src/redux/stor.js`: store configuration with persist (whitelist: `user`, `pdf`, `chat`)
+- `src/redux/*Slice.js`: slices for user, pdf, chat
+- `src/axios/*`: axios thunks for login/signup, model settings, PDF upload/list/delete, chats and answers
+- `src/component/*`: screens/components (`Login`, `Signup`, `Dashboard`, `Chat`, `Setting`, `AppHeader`)
+- `src/main.jsx` and `src/App.jsx`: app bootstrap and router setup
+
+Dev setup tips:
+
+- Ensure backend is running on `http://localhost:8081` or update the Axios base URLs
+- If needed, configure CORS in the Spring app to allow the Vite dev origin (e.g., `http://localhost:5173` by default)
 
 ---
 
@@ -117,7 +165,7 @@ Optional GUI lives under `Pdf_Chat_Gui/` (if used). Refer to its README for setu
 
 ---
 
-## API Reference (Exact)
+## API Reference
 
 Base URL: `/api`
 
@@ -253,12 +301,6 @@ Contributions are welcome! Please open an issue or submit a PR.
 
 ---
 
-## License
-
-MIT License. See `LICENSE` file if present, or add one before distributing.
-
----
-
 ## Acknowledgements
 
 - Hugging Face for embeddings and model hosting
@@ -267,5 +309,6 @@ MIT License. See `LICENSE` file if present, or add one before distributing.
 - Tesseract OCR
 
 # Pdf-Chat-bot
+
 
 
