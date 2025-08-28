@@ -4,6 +4,7 @@ import com.example.Pdf_Chat_bot.Dto.AddPdf;
 import com.example.Pdf_Chat_bot.Dto.UserPdfs;
 import com.example.Pdf_Chat_bot.exception.FileExistExeption;
 import com.example.Pdf_Chat_bot.exception.FileNotFoundException;
+import com.example.Pdf_Chat_bot.exception.OcrException;
 import com.example.Pdf_Chat_bot.exception.PdfReadingException;
 import com.example.Pdf_Chat_bot.mapping.PdfMapping;
 import com.example.Pdf_Chat_bot.model.AppUser;
@@ -122,8 +123,14 @@ public class PdfService {
 
     }
     public List<UserPdfs> GetUserPdfs(Integer id){
-        AppUser user =userService.getUser(id);
-        return user.getPdfs().stream().map(pdfMapping::toUserPdf).collect(Collectors.toList());
+        try{
+            AppUser user =userService.getUser(id);
+            return user.getPdfs().stream().map(pdfMapping::toUserPdf).collect(Collectors.toList());
+        }
+        catch (RuntimeException exception)
+        {
+            throw new RuntimeException("cant get the user user pdf");
+        }
     }
     public List<PdfChank> GetPdfChank(Integer id)
     {
@@ -141,6 +148,4 @@ public class PdfService {
         pdfRepo.deleteById(id);
         return true;
     }
-
-
 }

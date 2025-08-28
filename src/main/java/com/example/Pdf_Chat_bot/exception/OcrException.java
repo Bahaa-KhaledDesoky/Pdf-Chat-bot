@@ -1,4 +1,4 @@
-package com.example.Pdf_Chat_bot.service;
+package com.example.Pdf_Chat_bot.exception;
 
 public class OcrException extends RuntimeException{
     public OcrException() {

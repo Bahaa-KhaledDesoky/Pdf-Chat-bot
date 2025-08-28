@@ -15,9 +15,9 @@ public class DeepSeekService {
         this.restTemplate = restTemplate;
     }
     private final RestTemplate restTemplate;
-
-
     public String getResponseFromDeepSeek(List<ChatMessageDTO> messages,String model,String apiKey) {
+        try {
+
         final String DEEPSEEK_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
         ChatRequestDTO requestDTO = new ChatRequestDTO(model, messages);
@@ -33,46 +33,57 @@ public class DeepSeekService {
                 ChatResponseDTO.class
         );
         return response.getBody().choices().get(0).message().content();
+        }
+        catch (RuntimeException exception)
+        {
+            throw new RuntimeException("check if the api is valid");
+        }
     }
     public String huggingFaceRespond(String history,String chunks, String question){
-        String baseUrl="https://bahaakhaled-flan-t5-small.hf.space/gradio_api/call/answer_question";
-        HttpHeaders headers=new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Accept","application/json");
-        List<String> data=new ArrayList<>();
-        data.add(history);
-        data.add(chunks);
-        data.add(question);
-        HttpEntity<HuggingFaceRequest> httpEntity=new HttpEntity<>(new HuggingFaceRequest(data));
+        try {
 
-        ResponseEntity<Map> postResponse = restTemplate.exchange(
-                baseUrl,
-                HttpMethod.POST,
-                httpEntity,
-                Map.class
-        );
+            String baseUrl="https://bahaakhaled-flan-t5-small.hf.space/gradio_api/call/answer_question";
+            HttpHeaders headers=new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Accept","application/json");
+            List<String> data=new ArrayList<>();
+            data.add(history);
+            data.add(chunks);
+            data.add(question);
+            HttpEntity<HuggingFaceRequest> httpEntity=new HttpEntity<>(new HuggingFaceRequest(data));
 
-        // Extract event_id from POST response
-        String eventId = (String) postResponse.getBody().get("event_id");
+            ResponseEntity<Map> postResponse = restTemplate.exchange(
+                    baseUrl,
+                    HttpMethod.POST,
+                    httpEntity,
+                    Map.class
+            );
 
-        if (eventId == null) {
-            throw new RuntimeException("Failed to get event_id from embedding API");
+            // Extract event_id from POST response
+            String eventId = (String) postResponse.getBody().get("event_id");
+
+            if (eventId == null) {
+                throw new RuntimeException("Failed to get event_id from embedding API");
+            }
+
+            // Step 2: GET request to fetch embeddings using event_id
+            String getUrl = baseUrl + "/" + eventId;
+
+            ResponseEntity<String> getResponse = restTemplate.exchange(
+                    getUrl,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    String.class
+            );
+            String response = getResponse.getBody();
+            int index1 =response.indexOf("[");
+            int index2 =response.indexOf("]");
+            response=response.substring(index1+2,index2-1);
+            return response;
         }
-
-        // Step 2: GET request to fetch embeddings using event_id
-        String getUrl = baseUrl + "/" + eventId;
-
-        ResponseEntity<String> getResponse = restTemplate.exchange(
-                getUrl,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
-        String response = getResponse.getBody();
-        int index1 =response.indexOf("[");
-        int index2 =response.indexOf("]");
-        response=response.substring(index1+2,index2-1);
-        return response;
-
+        catch (RuntimeException exception)
+        {
+            throw new RuntimeException("try again");
+        }
     }
 }

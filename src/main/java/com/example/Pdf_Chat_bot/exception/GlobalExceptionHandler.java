@@ -1,6 +1,5 @@
 package com.example.Pdf_Chat_bot.exception;
 
-import com.example.Pdf_Chat_bot.service.OcrException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

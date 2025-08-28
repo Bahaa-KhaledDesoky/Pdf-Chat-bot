@@ -31,4 +31,7 @@ public class Pdf {
     @OneToMany(mappedBy = "pdf",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Chat> chats;
+    @OneToMany(mappedBy = "pdf",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PdfChank> chanks;
 }

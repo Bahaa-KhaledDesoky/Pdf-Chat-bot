@@ -73,7 +73,7 @@ public class ChatService {
         AppUser user =pdfService.GetPdf(pdf.id()).getUser();
         chats.add(0,new ChatMessageDTO(Sender.system.toString(),"You are a helpful assistant that only" +
                 " answers based on the content of the uploaded PDF only no thing else even if the user uploaded another text and " +
-                "he cant uploade any thing direct to you if he want to chat another pdf he can uploade it on the web site and have its own shat." +
+                "he cant uploade any thing direct to you if he want to chat another pdf he can uploade it on the web site and have its own chat." +
                 " Do not use any other knowledge.the title of the book is "+pdf.title()+" . The PDF contains" +
                 " the following chunks: "+chunksText ));
         String respond =deepSeekService.getResponseFromDeepSeek(chats,user.getModelName(),user.getOpenRouterKey());
@@ -88,7 +88,7 @@ public class ChatService {
                 " answers based on the content. the title of the file is "+pdf.title()));
         String chatText="";
         for(ChatMessageDTO messageDTO :chats){
-            chatText+=" "+messageDTO.role()+" : "+messageDTO.content();
+            chatText+=" "+messageDTO.role()+" : "+messageDTO.content()+"/n";
         }
         String respond =deepSeekService.huggingFaceRespond(chatText,chunksText,message);
         saveQA(message,respond,pdf);

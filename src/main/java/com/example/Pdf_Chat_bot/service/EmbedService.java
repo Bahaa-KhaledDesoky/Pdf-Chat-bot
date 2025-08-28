@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +16,11 @@ import java.util.Map;
 @Service
 public class EmbedService {
     private final RestTemplate restTemplate;
-    private final DeepSeekService deepSeekService;
     public EmbedService(RestTemplate restTemplate, DeepSeekService deepSeekService){
         this.restTemplate=restTemplate;
-        this.deepSeekService = deepSeekService;
     }
     public List<List<Double>> getEmbeddings(List<String> texts) {
-
+        try {
 
         // Base URL for Gradio API predict call
         String baseUrl = "https://bahaakhaled-pdfembedding.hf.space/gradio_api/call/predict";
@@ -68,7 +64,7 @@ public class EmbedService {
         int index = body.indexOf("data:");
         body = body.substring(index+"data:".length()).trim();
         ObjectMapper mapper = new ObjectMapper();
-        try {
+
             List<List<List<Double>>> list = mapper.readValue(body, new TypeReference<List<List<List<Double>>>>() {});
             return list.get(0);
         }
