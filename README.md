@@ -117,34 +117,110 @@ Optional GUI lives under `Pdf_Chat_Gui/` (if used). Refer to its README for setu
 
 ---
 
-## API Overview
+## API Reference (Exact)
 
-Note: Endpoints and payloads may differ based on your controllers. The following is a representative contract.
+Base URL: `/api`
 
-- `POST /api/pdf/upload`
-  - Multipart form with field `file` as the PDF
-  - Response: document id and basic metadata
+### Auth & Model Settings
 
-- `POST /api/chat/ask`
-  - JSON body:
+- `POST /api/user/SignUp`
+  - Body (JSON):
+    ```json
+    { "email": "user@example.com", "username": "alice", "password": "secret" }
+    ```
+  - Response: `Integer` (new user id)
+
+- `POST /api/user/Login`
+  - Body (JSON):
+    ```json
+    { "email": "user@example.com", "password": "secret" }
+    ```
+  - Response: `Integer` (user id if success; backend returns an integer flag)
+
+- `POST /api/user/model`
+  - Body (JSON):
+    ```json
+    { "userId": 1, "modelName": "openrouter/model:name", "apiKey": "sk-..." }
+    ```
+  - Response: `Boolean` (true on save)
+
+### PDFs
+
+- `POST /api/pdf/AddPdf`
+  - Multipart form-data fields:
+    - `file`: PDF file
+    - `userId`: integer
+    - `title`: string
+  - Response: `Boolean` (true if ingested)
+
+- `GET /api/pdf/GetUserPdfs/{id}`
+  - Path: `id` = user id
+  - Response: `UserPdfs[]`
+    ```json
+    [ { "id": 12, "title": "My PDF" } ]
+    ```
+
+- `GET /api/pdf/GetPdf?id={pdfId}`
+  - Query: `id` = pdf id
+  - Response: `Pdf`
+    ```json
+    { "id": 12, "title": "My PDF", "text": "...extracted text..." }
+    ```
+
+- `DELETE /api/pdf/DeletePdf/{id}`
+  - Path: `id` = pdf id
+  - Response: `Boolean`
+
+### Chat
+
+- `GET /api/chat/GetAllChat/{pdf_id}`
+  - Path: `pdf_id` = pdf id
+  - Response: `ChatMessageDTO[]`
+    ```json
+    [ { "role": "user", "content": "..." }, { "role": "assistant", "content": "..." } ]
+    ```
+
+- `POST /api/chat/getRespondFromAi`
+  - Body (JSON): `SendMessage`
     ```json
     {
-      "documentId": "abc123",
-      "question": "What is the warranty period?",
-      "ai": "huggingface|openrouter",
-      "modelName": "google/flan-t5-small",
-      "openRouterApiKey": "sk-...", 
-      "history": [
-        { "role": "user", "content": "Summarize the intro."},
-        { "role": "assistant", "content": "..."}
+      "chats": [
+        { "role": "user", "content": "What is X?" }
       ],
-      "topK": 5
+      "pdf": { "id": 12, "title": "My PDF" },
+      "flag": true
     }
     ```
-  - Response: model answer + optionally the chunk references used
+    - `flag = true` routes to OpenRouter using the stored per-user `modelName` and `openRouterKey`
+    - `flag = false` routes to Hugging Face Space (Flan‑T5 Small)
+  - Response: `String` (model answer)
 
-- `GET /api/health`
-  - Basic health check
+### DTO Schemas
+
+- `ChatMessageDTO`
+  ```json
+  { "role": "user|assistant|system", "content": "text" }
+  ```
+- `UserPdfs`
+  ```json
+  { "id": 12, "title": "Book Title" }
+  ```
+- `SendMessage`
+  ```json
+  { "chats": [ChatMessageDTO], "pdf": UserPdfs, "flag": true }
+  ```
+- `SignUp`
+  ```json
+  { "email": "...", "username": "...", "password": "..." }
+  ```
+- `Login`
+  ```json
+  { "email": "...", "password": "..." }
+  ```
+- `AddOpenRouter`
+  ```json
+  { "userId": 1, "modelName": "...", "apiKey": "..." }
+  ```
 
 ---
 
@@ -191,4 +267,5 @@ MIT License. See `LICENSE` file if present, or add one before distributing.
 - Tesseract OCR
 
 # Pdf-Chat-bot
+
 
