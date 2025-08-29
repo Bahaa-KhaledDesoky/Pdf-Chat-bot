@@ -27,6 +27,13 @@ const userSlice = createSlice({
             state.user.password='';
             state.status= 'idle';
             state.error = null;
+        },
+        clearAuthState: (state) => {
+            state.user.id = "";
+            state.user.email = '';
+            state.user.password = '';
+            state.status = 'idle';
+            state.error = null;
         }
         
     },
@@ -51,8 +58,9 @@ const userSlice = createSlice({
                 state.status = 'loading';
                 console.log(state.status);
             })
-            .addCase(SignUpRequest.fulfilled, (state) => {
+            .addCase(SignUpRequest.fulfilled, (state, action) => {
                 state.status = 'success';
+                state.user.id = action.payload;
                 console.log(state.status);
             }).addCase(SignUpRequest.rejected, (state, action) => {
                 state.status = "rejected";
@@ -74,5 +82,5 @@ const userSlice = createSlice({
 
 });
 
-export const { login, signOut } = userSlice.actions;
+export const { login, signOut, clearAuthState } = userSlice.actions;
 export default userSlice.reducer;

@@ -23,7 +23,6 @@ public class ChatService {
     private final DeepSeekService deepSeekService;
     private final PdfMapping pdfMapping;
     private final ChatMapping chatMapping;
-
     private final EmbedService embedService;
 
     public List<ChatMessageDTO> GetAllChat(Integer pdf_id){
@@ -32,7 +31,6 @@ public class ChatService {
                 .stream()
                 .map(chatMapping::toChatDto).collect(Collectors.toList());
     }
-
     private void saveQA(String message, String respond,UserPdfs pdf){
         Chat userRequest =Chat.builder()
                 .sender(Sender.user)

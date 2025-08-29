@@ -15,7 +15,7 @@ import java.util.List;
 @Table(
         name = "pdf",
         indexes = {
-                @Index(name = "idx_user",columnList = "user_id")
+                @Index(name = "idx_user",columnList = "user")
         }
 )
 public class Pdf {
@@ -26,7 +26,7 @@ public class Pdf {
     @Column(columnDefinition = "LONGTEXT")
     private String text;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     private AppUser user;
     @OneToMany(mappedBy = "pdf",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

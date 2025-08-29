@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SignUpRequest } from '../axios/userRequstes';
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { clearAuthState } from '../redux/userSlice';
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -12,10 +13,23 @@ const Signup = () => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [localError, setLocalError] = useState("");
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const status = useSelector((state) => state.user.status);
     const error = useSelector((state) => state.user.error);
+    const userId = useSelector((state) => state.user.user.id);
 
     const isLoading = status === 'loading';
+
+    // Navigate to login page after successful signup
+    useEffect(() => {
+        if (status === 'success' && userId) {
+            // Show success message briefly then clear state and navigate to login
+            setTimeout(() => {
+                dispatch(clearAuthState());
+                navigate('/login');
+            }, 1500);
+        }
+    }, [status, userId, navigate, dispatch]);
 
     function validateEmail(value) {
         return /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
@@ -62,6 +76,12 @@ const Signup = () => {
                 {(localError || error) && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
                         {localError || serverError}
+                    </div>
+                )}
+                
+                {status === 'success' && userId && (
+                    <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+                        Account created successfully! Redirecting to login...
                     </div>
                 )}
 

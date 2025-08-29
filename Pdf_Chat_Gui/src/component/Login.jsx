@@ -10,6 +10,7 @@ import { useEffect } from "react";
 const Login = () => {
     const status = useSelector((state) => state.user.status);
     const error = useSelector((state) => state.user.error);
+    const userId = useSelector((state) => state.user.user.id);
     const [email,setEmail]=useState("");
     const [password, setPassword] = useState("");
     const [localError, setLocalError] = useState("");
@@ -44,10 +45,10 @@ const Login = () => {
     }
     
     useEffect(() => {
-        if (status === 'success') {
+        if (status === 'success' && userId) {
             navigate('/dashboard'); 
         }
-    }, [status, navigate]);
+    }, [status, navigate, userId]);
 
     // Clear error when user starts typing
     const handleEmailChange = (e) => {
