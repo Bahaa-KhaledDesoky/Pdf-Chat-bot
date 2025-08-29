@@ -34,7 +34,7 @@ Talk to your PDFs. Upload a PDF, we extract text (with OCR fallback), chunk it, 
 ---
 
 ## 🎥 Demo Video
-[Watch the demo video here](./demo/pdf_chat_speed.mp4)
+[Watch the demo video here](https://drive.google.com/file/d/1ATC6DJtEzKhxv7H_AYCL2d70Na9_Ip0x/view?usp=drive_link)
 
 ---
 
@@ -314,6 +314,7 @@ Contributions are welcome! Please open an issue or submit a PR.
 - Tesseract OCR
 
 # Pdf-Chat-bot
+
 
 
 
